@@ -90,6 +90,11 @@ foreach ($tool in $tools) {
 # Expand-Archive -Path .\ImHex.zip -DestinationPath "$env:ProgramFiles\ImHex"
 # Remove-Item .\ImHex.zip
 
+# installing Universal Extractor 2
+Invoke-WebRequest -Uri https://github.com/Bioruebe/UniExtract2/releases/download/v2.0.0-rc.3/UniExtractRC3.zip -OutFile UniExtractRC3.zip
+Expand-Archive -Path .\UniExtractRC3.zip -DestinationPath "$env:ProgramFiles\UniExtract"
+Remove-Item .\UniExtractRC3.zip
+
 # installing api-monitor
 Invoke-WebRequest -Uri http://www.rohitab.com/download/api-monitor-v2r13-x86-x64.zip -OutFile api-monitor.zip
 Expand-Archive -Path .\api-monitor.zip -DestinationPath .\api-monitor
@@ -169,5 +174,6 @@ Restart-Computer -Force
 4. edge settings (download path, etc.), mal sample DB bookmarks
 5. installing root cert for mitmproxy
 #>
+
 
 
