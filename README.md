@@ -97,7 +97,7 @@ Though [disable-defender.exe](https://github.com/pgkt04/defender-control/release
 - [Python](https://www.python.org/downloads/) (v3.14)
 - [Volatility 3](https://github.com/volatilityfoundation/volatility3)
 - [Temurin JDK](https://adoptium.net/temurin/releases) (v21.0)
-- [UPX](https://github.com/upx/upx)
+- [UniExtract2](https://github.com/Bioruebe/UniExtract2)
 - [7-Zip](https://www.7-zip.org/)
 
 <br>
