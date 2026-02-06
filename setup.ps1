@@ -78,7 +78,7 @@ $tools = @(
   'pestudio', 'imhex', 'x64dbg.portable', 'temurin', 'ghidra',
   'cyberchef', 'floss', 'pesieve', 'die', 'capa', 'yara', 'wireshark',
   'sysinternals', 'systeminformer', 'regshot', 'fakenet',
-  'upx', '7zip', 'vscode', 'mitmproxy', 'volatility3', 'python',
+  '7zip', 'vscode', 'mitmproxy', 'volatility3', 'python',
   'notepadplusplus', 'everything', 'pebear', 'dnspyex'
 )
 foreach ($tool in $tools) {
@@ -174,6 +174,7 @@ Restart-Computer -Force
 4. edge settings (download path, etc.), mal sample DB bookmarks
 5. installing root cert for mitmproxy
 #>
+
 
 
 
