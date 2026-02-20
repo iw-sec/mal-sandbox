@@ -1,5 +1,5 @@
 # mal-sandbox
-my KVM/QEMU sandbox for analysis of Windows x86-64 malware
+my sandbox for analysis of Windows x86-64 malware
 
 <br>
 
@@ -7,7 +7,7 @@ my KVM/QEMU sandbox for analysis of Windows x86-64 malware
 ### Defining Guest / Interfaces
 
 > [!NOTE]
-> The following is intended for libvirt-based virtualization. If you use another VM manager or hypervisor (VMware, VirtualBox, etc.), you can still create a similar guest VM using the hardware configurations shown [below](https://github.com/isaacward1/my-mal-sandbox/blob/main/README.md#system).
+> The following is intended for libvirt-based virtualization (KVM/QEMU). If you use another VM manager or hypervisor (VMware, VirtualBox, etc.), you can still create a similar guest VM using the hardware configurations shown [below](https://github.com/isaacward1/my-mal-sandbox/blob/main/README.md#system).
 
 
 These are the libvirt XML files for replicating my KVM/QEMU VM and networks:
