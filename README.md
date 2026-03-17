@@ -73,7 +73,9 @@ Though [disable-defender.exe](https://github.com/pgkt04/defender-control/release
 ## Analysis Tools
 ### Static
 - [PEStudio](https://www.winitor.com/download)
+- [PE-bear](https://github.com/hasherezade/pe-bear)
 - [DIE](https://github.com/horsicq/DIE-engine/releases)
+- [dnSpyEx](https://github.com/dnSpyEx/dnSpy)
 - [ImHex](https://github.com/WerWolv/ImHex)
 - [Ghidra](https://github.com/NationalSecurityAgency/ghidra)
 - [CyberChef](https://github.com/gchq/CyberChef)
@@ -88,8 +90,6 @@ Though [disable-defender.exe](https://github.com/pgkt04/defender-control/release
 - [mitmproxy](https://www.mitmproxy.org/)
 - [Sysinternals Suite](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite)
 - [System Informer](https://github.com/winsiderss/systeminformer)
-- [RegShot](https://sourceforge.net/projects/regshot/)
-- [API Monitor](http://www.rohitab.com/downloads)
 
 ### Other
 - [disable-defender.exe](https://github.com/pgkt04/defender-control/releases/tag/v1.5)
@@ -195,6 +195,7 @@ To-Do
 - Scylla
 - IDA Free
 - Binary Ninja
+- Visual Studio
 
 - right-click context menu for tools
 - turn off cloud-based protection and automatic sample submission via registry
