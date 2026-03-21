@@ -90,6 +90,7 @@ Though [disable-defender.exe](https://github.com/pgkt04/defender-control/release
 - [mitmproxy](https://www.mitmproxy.org/)
 - [Sysinternals Suite](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite)
 - [System Informer](https://github.com/winsiderss/systeminformer)
+- [Suricata](https://suricata.io/download/)
 
 ### Other
 - [disable-defender.exe](https://github.com/pgkt04/defender-control/releases/tag/v1.5)
