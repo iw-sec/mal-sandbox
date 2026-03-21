@@ -57,10 +57,12 @@ Set-Content -Path $PROFILE -Value 'function prompt { "PS > " }'
 $tools_folder = "$env:userprofile\Desktop\tools"
 $mal_folder = "$env:userprofile\Desktop\mal"
 $out_folder = "$env:userprofile\Desktop\out"
+$TOOLS = "$env:ProgramFiles\Tools"
 
-mkdir $tools_folder; Add-MpPreference -ExclusionPath $tools_folder
-mkdir $mal_folder; Add-MpPreference -ExclusionPath $mal_folder
-mkdir $out_folder; Add-MpPreference -ExclusionPath $out_folder
+New-Item -Path $tools_folder; Add-MpPreference -ExclusionPath $tools_folder
+New-Item -Path $mal_folder; Add-MpPreference -ExclusionPath $mal_folder
+New-Item -Path $out_folder; Add-MpPreference -ExclusionPath $out_folder
+New-Item -Path $TOOLS -ItemType Directory -Force; Add-MpPreference -ExclusionPath $TOOLS
 
 # removing trash
 winget uninstall "Copilot"
@@ -85,21 +87,16 @@ foreach ($tool in $tools) {
   choco install $tool -y --ignore-checksums
 }
 
-# installing imhex (NoGPU)
-# Invoke-WebRequest -Uri https://github.com/WerWolv/ImHex/releases/download/v1.38.1/imhex-1.38.1-Windows-Portable-NoGPU-x86_64.zip -OutFile ImHex.zip
-# Expand-Archive -Path .\ImHex.zip -DestinationPath "$env:ProgramFiles\ImHex"
-# Remove-Item .\ImHex.zip
-
 # installing Universal Extractor 2
+$UniExtractDir = "$TOOLS\UniExtract"
+[Environment]::SetEnvironmentVariable("Path", "$([Environment]::GetEnvironmentVariable('Path', 'Machine'));$UniExtractDir", "Machine")
 Invoke-WebRequest -Uri https://github.com/Bioruebe/UniExtract2/releases/download/v2.0.0-rc.3/UniExtractRC3.zip -OutFile UniExtractRC3.zip
-Expand-Archive -Path .\UniExtractRC3.zip -DestinationPath "$env:ProgramFiles\UniExtract"
+Expand-Archive -Path .\UniExtractRC3.zip -DestinationPath $UniExtractDir
 Remove-Item .\UniExtractRC3.zip
 
-# installing api-monitor
-Invoke-WebRequest -Uri http://www.rohitab.com/download/api-monitor-v2r13-x86-x64.zip -OutFile api-monitor.zip
-Expand-Archive -Path .\api-monitor.zip -DestinationPath .\api-monitor
-Move-Item .\api-monitor -Destination $env:ProgramFiles
-Remove-Item .\api-monitor.zip
+# installing Suricata
+Invoke-WebRequest -Uri https://www.openinfosecfoundation.org/download/windows/Suricata-8.0.3-1-64bit.msi -OutFile suricata.msi
+Start-Process msiexec.exe -ArgumentList "/i suricata.msi /quiet /norestart" -Wait
 
 # installing npcap
 Invoke-WebRequest -Uri https://npcap.com/dist/npcap-1.85.exe -OutFile npcap-1.85.exe
@@ -108,6 +105,17 @@ Remove-Ttem .\npcap-1.85.exe
 
 # installing disable-defender.exe
 Invoke-WebRequest -Uri https://github.com/pgkt04/defender-control/releases/download/v1.5/disable-defender.exe -OutFile $tools_folder\disable-defender.exe
+
+# installing imhex (NoGPU)
+# Invoke-WebRequest -Uri https://github.com/WerWolv/ImHex/releases/download/v1.38.1/imhex-1.38.1-Windows-Portable-NoGPU-x86_64.zip -OutFile ImHex.zip
+# Expand-Archive -Path .\ImHex.zip -DestinationPath "$TOOLS\ImHex"
+# Remove-Item .\ImHex.zip
+
+# installing api-monitor
+#Invoke-WebRequest -Uri http://www.rohitab.com/download/api-monitor-v2r13-x86-x64.zip -OutFile api-monitor.zip
+#Expand-Archive -Path .\api-monitor.zip -DestinationPath .\api-monitor
+#Move-Item .\api-monitor -Destination $TOOLS
+#Remove-Item .\api-monitor.zip
 
 # installing mesa drivers
 Write-Host "installing mesa drivers..."
@@ -174,7 +182,3 @@ Restart-Computer -Force
 4. edge settings (download path, etc.), mal sample DB bookmarks
 5. installing root cert for mitmproxy
 #>
-
-
-
-
