@@ -98,6 +98,7 @@ Remove-Item .\UniExtractRC3.zip
 Invoke-WebRequest -Uri https://www.openinfosecfoundation.org/download/windows/Suricata-8.0.3-1-64bit.msi -OutFile suricata.msi
 Start-Process msiexec.exe -ArgumentList "/i suricata.msi /quiet /norestart" -Wait
 Remove-Item .\suricata.msi
+[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\Program Files\Suricata", "Machine")
 
 # installing npcap
 Invoke-WebRequest -Uri https://npcap.com/dist/npcap-1.85.exe -OutFile npcap-1.85.exe
