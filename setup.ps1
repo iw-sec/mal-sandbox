@@ -97,11 +97,12 @@ Remove-Item .\UniExtractRC3.zip
 # installing Suricata
 Invoke-WebRequest -Uri https://www.openinfosecfoundation.org/download/windows/Suricata-8.0.3-1-64bit.msi -OutFile suricata.msi
 Start-Process msiexec.exe -ArgumentList "/i suricata.msi /quiet /norestart" -Wait
+Remove-Item .\suricata.msi
 
 # installing npcap
 Invoke-WebRequest -Uri https://npcap.com/dist/npcap-1.85.exe -OutFile npcap-1.85.exe
 .\npcap-1.85.exe
-Remove-Ttem .\npcap-1.85.exe
+Remove-Item .\npcap-1.85.exe
 
 # installing disable-defender.exe
 Invoke-WebRequest -Uri https://github.com/pgkt04/defender-control/releases/download/v1.5/disable-defender.exe -OutFile $tools_folder\disable-defender.exe
