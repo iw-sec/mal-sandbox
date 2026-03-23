@@ -197,6 +197,7 @@ To-Do
 - IDA Free
 - Binary Ninja
 - Visual Studio
+- NodeJS
 
 - right-click context menu for tools
 - turn off cloud-based protection and automatic sample submission via registry
