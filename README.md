@@ -156,13 +156,21 @@ Firewall rule applied on the host. It allows inbound access from the VM to the h
 
 ### Using Python [http.server](https://docs.python.org/3/library/http.server.html#)
 
+#### Hardening
+- separate user; no login no perms
+- unexecutable folder
+- limited python http server
+
+
+
+
 #### Uploading from Host --> VM
 
 1. Run on host to serve malware to VM:
  
         python3 -m http.server -d /path/to/served/dir --bind <host-only-gateway> <python server port>
 
-3. On VM's browser, navigate to `http://<host-only-gateway>:<python server port>`
+2. On VM's browser, navigate to `http://<host-only-gateway>:<python server port>`
 
 #### Downloading from VM --> Host
 
@@ -173,7 +181,7 @@ Firewall rule applied on the host. It allows inbound access from the VM to the h
 2. On host's browser, navigate to `http://<vm-hostonly-ip>:<python server port>`
 
 ### Alternatives
-- Hardened scp/OpenSSH
+- Hardened SFTP
 - Dedicated lightweight VM or container for uploading and downloading files to/from VM
 - Read-only shared folder
 - Downloading malware onto VM from online DBs (temporary internet)
