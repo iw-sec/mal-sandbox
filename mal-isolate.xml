@@ -1,4 +1,4 @@
-<filter name='mal-isolate' chain='ipv4' priority='-700'>
+<filter name='mal-isolate' chain='root' priority='-700'>
   <!-- allow outbound to mal-ho-br -->
   <rule action='accept' direction='out' priority='500'>
     <ip dstipaddr='10.0.0.1'/>
