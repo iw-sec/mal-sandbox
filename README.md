@@ -104,10 +104,10 @@ Though [disable-defender.exe](https://github.com/pgkt04/defender-control/release
 <br>
 
 ## Network Isolation
-Isolation is done mostly through libvirt [network filters](https://libvirt.org/formatnwfilter.html).
+Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilter.html).
 
 ### mal-isolate:
-    <filter name='mal-isolate' chain='ipv4' priority='-700'>
+    <filter name='mal-isolate' chain='root' priority='-700'>
       <!-- allow outbound to mal-ho-br -->
       <rule action='accept' direction='out' priority='500'>
         <ip dstipaddr='10.0.0.1'/>
@@ -137,18 +137,8 @@ Isolation is done mostly through libvirt [network filters](https://libvirt.org/f
     <filter name='mal-root' chain='root'>
       <filterref filter='allow-arp'/>
       <filterref filter='clean-traffic'/>
-      <filterref filter='mal-inet-only'/>
+      <filterref filter='mal-isolate'/>
     </filter>
-
-### UFW
-Firewall rule applied on the host. It allows inbound access from the VM to the host's python http server.
-    
-    iface="mal-ho-br"	# name of VM's host-only bridge
-    br_ip="10.0.0.1"	# host-only interface's gateway IP
-    vm_ip="10.0.0.2"	# host IP assigned to VM on host-only network
-    port="8888"			# python http.server port
-    
-    sudo ufw allow in on $iface from $vm_ip to $br_ip port $port proto tcp comment '(mal) allow to host python http.server'
 
 <br>
 
@@ -157,9 +147,35 @@ Firewall rule applied on the host. It allows inbound access from the VM to the h
 ### Using Python [http.server](https://docs.python.org/3/library/http.server.html#)
 
 #### Hardening
+
+1. UFW rule
+    
+        iface="mal-ho-br"	# name of VM's host-only bridge
+        br_ip="10.0.0.1"	# host-only interface's gateway IP
+        vm_ip="10.0.0.2"	# host IP assigned to VM on host-only network
+        port="8888"			# python http.server port
+        
+        sudo ufw allow in on $iface from $vm_ip to $br_ip port $port proto tcp comment '(mal) allow to host python http.server'
+- allows inbound access only from the VM to the host's python http server on port 8888.
+
+2. Windows FW Rule
+
+2. 
+3. f
+4. f
+5. f
+6. f
+7. f
+8. f
+
+
+
 - separate user; no login no perms
 - unexecutable folder
 - limited python http server
+
+
+
 
 
 
