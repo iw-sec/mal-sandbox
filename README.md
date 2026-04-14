@@ -148,7 +148,49 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
 
 #### Hardening
 
-1. UFW rule
+1. Dedicated User (malstore)
+
+        sudo useradd -r -s /usr/sbin/nologin malstore
+
+2. Malware storage
+
+        sudo mkdir -p /home/malstore/mal
+        sudo chown malstore:malstore /home/malstore/mal
+        sudo chmod 700 /home/malstore/mal
+
+
+3. systemd Sandboxing
+> sudo nano /etc/systemd/system/malstore.service
+
+    [Unit]
+    Description=Malware Storage Service
+    
+    [Service]
+    User=malstore
+    ExecStart=/usr/bin/sleep infinity
+    
+    NoNewPrivileges=true
+    PrivateTmp=true
+    
+    ProtectSystem=strict
+    ProtectHome=true
+    
+    ReadWritePaths=/home/malstore/mal
+    NoExecPaths=/home/malstore/mal
+    
+    MemoryDenyWriteExecute=true
+    RestrictSUIDSGID=true
+    LockPersonality=true
+    RestrictNamespaces=true
+    PrivateDevices=true
+    ProtectKernelTunables=true
+    ProtectKernelModules=true
+    ProtectControlGroups=true
+    
+    [Install]
+    WantedBy=multi-user.target
+
+3. UFW rule
     
         iface="mal-ho-br"	# name of VM's host-only bridge
         br_ip="10.0.0.1"	# host-only interface's gateway IP
@@ -158,15 +200,24 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
         sudo ufw allow in on $iface from $vm_ip to $br_ip port $port proto tcp comment '(mal) allow to host python http.server'
 - allows inbound access only from the VM to the host's python http server on port 8888.
 
+
+5. Minimal HTTPServer (malserver.py)
+
+> sudo -u malstore nano /home/malstore/mal/malserver.py
+
+
+
+
+
+
+> sudo chown malstore:malstore ./malserver.py
+
+
 2. Windows FW Rule
 
-2. 
-3. f
-4. f
-5. f
-6. f
-7. f
-8. f
+
+
+
 
 
 
@@ -183,18 +234,18 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
 #### Uploading from Host --> VM
 
 1. Run on host to serve malware to VM:
- 
-        python3 -m http.server -d /path/to/served/dir --bind <host-only-gateway> <python server port>
 
-2. On VM's browser, navigate to `http://<host-only-gateway>:<python server port>`
+        sudo -u malstore python3 -m http.server -d /home/malstore/mal --bind 10.0.0.1 8888
+
+2. On VM's browser, navigate to `http://10.0.0.1:8888`
 
 #### Downloading from VM --> Host
 
 1. Run on VM to download files to host:
 
-        python3 -m http.server --bind <vm-hostonly-ip> <python server port>
+        python3 -m http.server --bind 10.0.0.2 8888
 
-2. On host's browser, navigate to `http://<vm-hostonly-ip>:<python server port>`
+2. On host's browser, navigate to `http://10.0.0.2:8888`
 
 ### Alternatives
 - Hardened SFTP
