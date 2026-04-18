@@ -213,38 +213,15 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
     [Install]
     WantedBy=multi-user.target
 
-> sudo nano /etc/systemd/system/malserver.service
+> systemctl enable --now malstore.service
 
-    [Unit]
-    Description=Mal Server Service
-    After=network.target
-    
-    [Service]
-    User=malstore
-    Group=malstore
-    ExecStart=/usr/bin/python3 /home/malstore/malserver.py
-    WorkingDirectory=/home/malstore/mal
-    Restart=always
-    
-    NoNewPrivileges=true
-    PrivateTmp=true
-    ProtectSystem=full
-    ProtectHome=true
-    ReadWritePaths=/home/malstore/mal
-    NoExecPaths=/home/malstore/mal
-    MemoryDenyWriteExecute=true
-    RestrictSUIDSGID=true
-    LockPersonality=true
-    RestrictNamespaces=true
-    PrivateDevices=true
-    ProtectKernelTunables=true
-    ProtectKernelModules=true
-    ProtectControlGroups=true
-    
-    [Install]
-    WantedBy=multi-user.target
+#### Uploading from Host --> VM
 
-> systemctl enable --now malstore.service malserver.service
+1. Run on host to serve malware to VM:
+ 
+        sudo -u malstore python3 /home/malstore/malserver.py
+
+2. On VM's browser, navigate to `http://10.0.0.1:8888`
 
 #### Downloading from VM --> Host
 
