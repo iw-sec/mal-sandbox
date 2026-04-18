@@ -183,6 +183,7 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
         ThreadingHTTPServer(("10.0.0.1", 8888), SimpleHTTPRequestHandler).serve_forever()
 
 > sudo chown malstore:malstore /home/malstore/malserver.py
+> 
 > sudo chmod +x /home/malstore/malserver.py
 
 6. systemd Sandboxing
