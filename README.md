@@ -147,37 +147,59 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
 ### Using Python [http.server](https://docs.python.org/3/library/http.server.html#)
 
 #### Hardening
+1. UFW rule
+    
+        iface="mal-ho-br"	# name of VM's host-only bridge
+        br_ip="10.0.0.1"	# host-only interface's gateway IP
+        vm_ip="10.0.0.2"	# host IP assigned to VM on host-only network
+        port="8888"		    # python http.server port
+        
+        sudo ufw allow in on $iface from $vm_ip to $br_ip port $port proto tcp comment '(mal) allow to host python http.server'
 
-1. Dedicated User (malstore)
+2. Dedicated User
 
         sudo useradd -r -s /usr/sbin/nologin malstore
 
-2. Malware storage
+3. Dedicated Folder
 
         sudo mkdir -p /home/malstore/mal
-        sudo chown malstore:malstore /home/malstore/mal
-        sudo chmod 700 /home/malstore/mal
+        sudo chown -R malstore:malstore /home/malstore
+        sudo chmod -R 700 /home/malstore
 
+4. Add to `/etc/fstab`
 
-3. systemd Sandboxing
+        # Malstore
+        /home/malstore/mal none none bind,noexec,nosuid,nodev 0 0
+
+5. Minimal HTTPServer (malserver.py)
+
+> sudo -u malstore nano /home/malstore/malserver.py
+    
+    from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+    
+    if __name__ == "__main__":
+        import os
+        os.chdir("/home/malstore")
+        ThreadingHTTPServer(("10.0.0.1", 8888), SimpleHTTPRequestHandler).serve_forever()
+
+> sudo chown malstore:malstore /home/malstore/malserver.py
+> sudo chmod +x /home/malstore/malserver.py
+
+6. systemd Sandboxing
 > sudo nano /etc/systemd/system/malstore.service
 
     [Unit]
-    Description=Malware Storage Service
+    Description=Mal Storage Service
     
     [Service]
     User=malstore
     ExecStart=/usr/bin/sleep infinity
-    
     NoNewPrivileges=true
     PrivateTmp=true
-    
     ProtectSystem=strict
     ProtectHome=true
-    
     ReadWritePaths=/home/malstore/mal
     NoExecPaths=/home/malstore/mal
-    
     MemoryDenyWriteExecute=true
     RestrictSUIDSGID=true
     LockPersonality=true
@@ -190,54 +212,38 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
     [Install]
     WantedBy=multi-user.target
 
-3. UFW rule
+> sudo nano /etc/systemd/system/malserver.service
+
+    [Unit]
+    Description=Mal Server Service
+    After=network.target
     
-        iface="mal-ho-br"	# name of VM's host-only bridge
-        br_ip="10.0.0.1"	# host-only interface's gateway IP
-        vm_ip="10.0.0.2"	# host IP assigned to VM on host-only network
-        port="8888"			# python http.server port
-        
-        sudo ufw allow in on $iface from $vm_ip to $br_ip port $port proto tcp comment '(mal) allow to host python http.server'
-- allows inbound access only from the VM to the host's python http server on port 8888.
+    [Service]
+    User=malstore
+    Group=malstore
+    ExecStart=/usr/bin/python3 /home/malstore/malserver.py
+    WorkingDirectory=/home/malstore/mal
+    Restart=always
+    
+    NoNewPrivileges=true
+    PrivateTmp=true
+    ProtectSystem=full
+    ProtectHome=true
+    ReadWritePaths=/home/malstore/mal
+    NoExecPaths=/home/malstore/mal
+    MemoryDenyWriteExecute=true
+    RestrictSUIDSGID=true
+    LockPersonality=true
+    RestrictNamespaces=true
+    PrivateDevices=true
+    ProtectKernelTunables=true
+    ProtectKernelModules=true
+    ProtectControlGroups=true
+    
+    [Install]
+    WantedBy=multi-user.target
 
-
-5. Minimal HTTPServer (malserver.py)
-
-> sudo -u malstore nano /home/malstore/mal/malserver.py
-
-
-
-
-
-
-> sudo chown malstore:malstore ./malserver.py
-
-
-2. Windows FW Rule
-
-
-
-
-
-
-
-- separate user; no login no perms
-- unexecutable folder
-- limited python http server
-
-
-
-
-
-
-
-#### Uploading from Host --> VM
-
-1. Run on host to serve malware to VM:
-
-        sudo -u malstore python3 -m http.server -d /home/malstore/mal --bind 10.0.0.1 8888
-
-2. On VM's browser, navigate to `http://10.0.0.1:8888`
+> systemctl enable --now malstore.service malserver.service
 
 #### Downloading from VM --> Host
 
@@ -250,16 +256,12 @@ Isolation is done via libvirt [network filters](https://libvirt.org/formatnwfilt
 ### Alternatives
 - Hardened SFTP
 - Dedicated lightweight VM or container for uploading and downloading files to/from VM
-- Read-only shared folder
-- Downloading malware onto VM from online DBs (temporary internet)
 
 <br>
 
 ## Tips
 - After setup and tweaking, take a snapshot to revert back to a clean state after detonating malware.
 - Before executing malware, ensure all hypervisor/emulation software is up to date with the latest security patches applied.
-- Use bash alias for python server<br>
-  Ex: `alias pyserver='python3 -m http.server -d ~/Downloads/mal-win10 --bind 10.0.0.1 8888'`
 - Ignore everything above. Just use [FLARE-VM](https://github.com/mandiant/flare-vm) or [REMnux](https://remnux.org/).
 
 <br>
